@@ -50,13 +50,14 @@ const cardsCallbackExport = (cards) => {
 const cardsCallbackTime = (cards) => {
     let sum = 0
     let optimistic = 0
+    let medium = 0
     let pessimistic = 0
     let cardsCount = 0
     let hours = 0
     let name = ""
     let matcher = null
 
-    const regex = /\[\s*(\d+)\S*\s*\S*\s*(\d+)\s*(\S*)\s*\]/s
+    const regex = /\[\s*(\d+)\s*\S*\s*(\d+)\s*\S*\s*(\d+)\s*(\S*)\s*\]/s
 
     cards.forEach(card => {
         if (program.all === undefined) {
@@ -68,8 +69,9 @@ const cardsCallbackTime = (cards) => {
 
         if (matcher !== null) {
             optimistic = parseFloat( matcher[1] )
-            pessimistic = parseFloat( matcher[2] )
-            pert = MathHelper.pert(optimistic, pessimistic)
+            medium = parseFloat( matcher[2] )
+            pessimistic = parseFloat( matcher[3] )
+            pert = MathHelper.pert(optimistic, medium, pessimistic)
             sum += pert
 
             hours = MathHelper.round2decimals(pert)
