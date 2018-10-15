@@ -17,12 +17,12 @@ program
     .parse(process.argv)
 
 if (program.board === undefined) {
-    console.log("Board name required.")
+    console.log("Board name is required.")
     process.exit(1)
 }
 
 if (program.list === undefined) {
-    console.log("List name required.")
+    console.log("List name is required.")
     process.exit(1)
 }
 
@@ -30,6 +30,18 @@ TrelloHelper.auth({
     key: process.env.TRELLO_KEY,
     token: process.env.TRELLO_TOKEN
 })
+
+if (process.env.TRELLO_KEY == undefined) {
+    console.log("TRELLO_KEY is required.")
+    console.log("Visit https://trello.com/app-key/ for more information.");
+    process.exit(1)
+}
+
+if (process.env.TRELLO_TOKEN == undefined) {
+    console.log("TRELLO_TOKEN is required.")
+    console.log("Visit https://trello.com/app-key/ for more information.");
+    process.exit(1)
+}
 
 let state = {}
 
