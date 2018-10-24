@@ -18,11 +18,7 @@ program
 
 if (program.board === undefined) {
     console.log("Board name is required.")
-    process.exit(1)
-}
-
-if (program.list === undefined) {
-    console.log("List name is required.")
+    program.help()
     process.exit(1)
 }
 
@@ -87,11 +83,12 @@ const cardsCallbackTime = (cards) => {
             sum += pert
 
             hours = MathHelper.round2decimals(pert)
-            name = card.name.substring(0, 80)
+            name = card.name.substring(0, 100)
 
             console.log(hours + " ------ " + name);
         } else {
-            console.log("Not matched - " + card.name);
+            name = card.name.substring(0, 100)
+            console.log("Not matched - " + name);
         }
     })
 
@@ -102,20 +99,33 @@ const cardsCallbackTime = (cards) => {
 
 const listCallback = (list) => {
     if (program.export) {
-        TrelloHelper.getCards(list.id, cardsCallbackExport)
+        TrelloHelper.getCardsFromList(list.id, cardsCallbackExport)
     } else {
-        TrelloHelper.getCards(list.id, cardsCallbackTime)
+        TrelloHelper.getCardsFromList(list.id, cardsCallbackTime)
     }
 }
 
-const boardCallback = (board) => {
+const boardCallbackCardsFromLists = (board) => {
     let listName = program.list
-    TrelloHelper.getLists(board.id, listName, listCallback)
+    TrelloHelper.getListsFromBoard(board.id, listName, listCallback)
+}
+
+const boardCallbackCardsFromBoard = (board) => {
+    if (program.export) {
+        TrelloHelper.getCardsFromBoard(board.id, cardsCallbackExport)
+    } else {
+        TrelloHelper.getCardsFromBoard(board.id, cardsCallbackTime)
+    }
 }
 
 const main = () => {
     let boardName = program.board
-    TrelloHelper.getBoard(boardName, boardCallback)
+
+    if (program.list) {
+        TrelloHelper.getBoard(boardName, boardCallbackCardsFromLists)
+    } else {
+        TrelloHelper.getBoard(boardName, boardCallbackCardsFromBoard)
+    }
 }
 
 if (program.all) {
